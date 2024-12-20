@@ -1,6 +1,9 @@
-package justin_kim.careNeighbers;
+package justin_kim.careNeighbers.post;
 
 import jakarta.persistence.*;
+import justin_kim.careNeighbers.user.User;
+import justin_kim.careNeighbers.comment.Comment;
+
 import java.util.Date;
 import java.util.List;
 

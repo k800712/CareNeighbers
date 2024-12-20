@@ -1,6 +1,7 @@
-package justin_kim.careNeighbers;
+package justin_kim.careNeighbers.noticBoard;
 
 import jakarta.persistence.*;
+import justin_kim.careNeighbers.post.Post;
 
 import java.util.Date;
 import java.util.List;

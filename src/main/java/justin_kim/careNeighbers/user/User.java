@@ -1,4 +1,4 @@
-package justin_kim.careNeighbers;
+package justin_kim.careNeighbers.user;
 
 import jakarta.persistence.*;
 
