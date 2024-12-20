@@ -1,22 +1,39 @@
 package justin_kim.careNeighbers;
 
-import org.apache.catalina.User;
-
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-public class Comment {
-    //댓글 정보를 관리
+@Entity
+public class Comment {  //댓글 정보를 관리
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private User author;
+
     private Date createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "parentComment_id")
     private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment")
     private List<Comment> replies;
 
 
-    public Comment(Long id, String content, User author, Date createdAt, Post post, Comment parentComment, List<Comment> replies) {
+    public Comment(Long id, String content, User author,
+                   Date createdAt, Post post, Comment parentComment,
+                   List<Comment> replies) {
         this.id = id;
         this.content = content;
         this.author = author;

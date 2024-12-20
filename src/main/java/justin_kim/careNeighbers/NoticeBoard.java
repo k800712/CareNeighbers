@@ -1,16 +1,24 @@
 package justin_kim.careNeighbers;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class NoticeBoard {
     //게시판의 기본정보 게시글 목록관리
     //게시글 추가,삭제,조회
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String title;
     private String description;
     private Date createdAt;
+
+    @OneToMany
     private List<Post> posts;
 
     public Long getId() {
