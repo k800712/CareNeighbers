@@ -103,15 +103,17 @@ public class Comment {  //댓글 정보를 관리
     }
 
     public void addReply(Comment reply) {
-        // 대댓글 추가
+
     }
 
     public void removeReply(Comment reply) {
-        // 대댓글 삭제
+
     }
 
     public void getAllReplies() {
-        // 모든 대댓글 조회
+
     }
+
+
 }
 
