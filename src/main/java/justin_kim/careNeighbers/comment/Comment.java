@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import justin_kim.careNeighbers.post.Post;
 import justin_kim.careNeighbers.user.User;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Comment {  //댓글 정보를 관리
-
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,22 +30,22 @@ public class Comment {  //댓글 정보를 관리
     @JoinColumn(name = "parentComment_id")
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "parentComment")
-    private List<Comment> replies;
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies = new ArrayList<>();
 
+    public Comment() {}
 
-    public Comment(Long id, String content, User author,
-                   Date createdAt, Post post, Comment parentComment,
-                   List<Comment> replies) {
+    public Comment(Long id, String content, User author, Date createdAt, Post post, Comment parentComment, List<Comment> replies) {
         this.id = id;
         this.content = content;
         this.author = author;
         this.createdAt = createdAt;
         this.post = post;
         this.parentComment = parentComment;
-        this.replies = replies;
+        this.replies = replies != null ? replies : new ArrayList<>();
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -103,17 +103,20 @@ public class Comment {  //댓글 정보를 관리
     }
 
     public void addReply(Comment reply) {
-
+        replies.add(reply);
+        reply.setParentComment(this);
     }
 
     public void removeReply(Comment reply) {
-
+        replies.remove(reply);
+        reply.setParentComment(null);
     }
 
-    public void getAllReplies() {
-
+    public List<Comment> getAllReplies() {
+        List<Comment> allReplies = new ArrayList<>(replies);
+        for (Comment reply : replies) {
+            allReplies.addAll(reply.getAllReplies());
+        }
+        return allReplies;
     }
-
-
 }
-

@@ -13,25 +13,25 @@ import java.util.List;
 @Service
 public class CommentService {
 
-    private final CommentRepositoy commentRepositoy;
+    private final CommentRepositoy commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public CommentService(CommentRepositoy commentRepositoy, UserRepository userRepository, PostRepository postRepository) {
-        this.commentRepositoy = commentRepositoy;
+    public CommentService(CommentRepositoy commentRepository, UserRepository userRepository, PostRepository postRepository) {
+        this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
     }
 
     public Comment createComment(@Valid CreatCommentRequst request) {
-        User author = userRepository.findById(Long.valueOf(request.authorId()))
+        User author = userRepository.findById(request.authorId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Post post = postRepository.findById(Long.valueOf(request.postId()))
+        Post post = postRepository.findById(request.postId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
         Comment parentComment = null;
         if (request.parentCommentId() != null) {
-            parentComment = commentRepositoy.findById(Long.parseLong(request.parentCommentId()))
+            parentComment = commentRepository.findById(request.parentCommentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent comment not found"));
         }
 
@@ -44,42 +44,29 @@ public class CommentService {
                 parentComment,
                 null
         );
-        return commentRepositoy.save(comment);
+        return commentRepository.save(comment);
     }
 
-
     public List<Comment> getAllComments() {
-        return commentRepositoy.findAll();
+        return commentRepository.findAll();
     }
 
     public Comment getCommentById(Long id) {
-        return commentRepositoy.findById(id)
+        return commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
     }
 
-    public List<Comment> getCommentsByPostId(String postId) {
-        return commentRepositoy.findByPostId(Long.parseLong(postId));
+    public List<Comment> getCommentsByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
     }
 
     public Comment updateComment(Long id, @Valid CreatCommentRequst request) {
         Comment existingComment = getCommentById(id);
         existingComment.setContent(request.content());
-        return commentRepositoy.save(existingComment);
+        return commentRepository.save(existingComment);
     }
 
     public void deleteComment(Long id) {
-        commentRepositoy.deleteById(id);
-    }
-
-    public CommentRepositoy getCommentRepositoy() {
-        return commentRepositoy;
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public PostRepository getPostRepository() {
-        return postRepository;
+        commentRepository.deleteById(id);
     }
 }

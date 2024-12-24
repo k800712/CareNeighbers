@@ -3,14 +3,14 @@ package justin_kim.careNeighbers.post;
 import jakarta.persistence.*;
 import justin_kim.careNeighbers.user.User;
 import justin_kim.careNeighbers.comment.Comment;
+import justin_kim.careNeighbers.noticBoard.NoticeBoard;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Post {
-    //개별 게시글의 정보 관리
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,22 +20,30 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+
     private Date createdAt;
     private int views;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    @ManyToOne
+    @JoinColumn(name = "notice_board_id")
+    private NoticeBoard noticeBoard;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    public Post() {} // 기본 생성자
 
     public Post(Long id, String title, String content,
                 User author, Date createdAt, int views,
-                List<Comment> comments) {
+                List<Comment> comments, NoticeBoard noticeBoard) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.author = author;
         this.createdAt = createdAt;
         this.views = views;
-        this.comments = comments;
+        this.comments = comments != null ? comments : new ArrayList<>();
+        this.noticeBoard = noticeBoard; // NoticeBoard 초기화
     }
 
     public Long getId() {
@@ -50,16 +58,8 @@ public class Post {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public User getAuthor() {
@@ -94,20 +94,45 @@ public class Post {
         this.comments = comments;
     }
 
+    // Getters and setters...
+
+    public void setTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Title must not be empty");
+        }
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("Content must not be empty");
+        }
+        this.content = content;
+    }
+
+    public NoticeBoard getNoticeBoard() {
+        return noticeBoard;
+    }
+
+    public void setNoticeBoard(NoticeBoard noticeBoard) {
+        this.noticeBoard = noticeBoard;
+    }
+
     public void incrementViews() {
-        // 조회수 증가
+        this.views++;
     }
 
     public void addComment(Comment comment) {
-        // 댓글 추가
+        comments.add(comment);
+        comment.setPost(this);
     }
 
     public void removeComment(Comment comment) {
-        // 댓글 삭제
+        comments.remove(comment);
+        comment.setPost(null);
     }
 
-    public void getAllComments() {
-        // 모든 댓글 조회
-
+    public List<Comment> getAllComments() {
+        return new ArrayList<>(comments);
     }
 }

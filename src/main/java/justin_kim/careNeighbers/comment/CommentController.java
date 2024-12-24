@@ -1,17 +1,13 @@
 package justin_kim.careNeighbers.comment;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -21,12 +17,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    public CommentService getCommentService() {
-        return commentService;
-
-    }
-
-    @PostMapping("/comments")
+    @PostMapping
     public Comment createComment(@Valid @RequestBody CreatCommentRequst request) {
         return commentService.createComment(request);
     }
@@ -42,7 +33,7 @@ public class CommentController {
     }
 
     @GetMapping("/post/{postId}")
-    public List<Comment> getCommentsByPostId(@PathVariable String postId) {
+    public List<Comment> getCommentsByPostId(@PathVariable Long postId) {
         return commentService.getCommentsByPostId(postId);
     }
 
@@ -56,4 +47,3 @@ public class CommentController {
         commentService.deleteComment(id);
     }
 }
-

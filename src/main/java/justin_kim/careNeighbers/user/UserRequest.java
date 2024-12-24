@@ -1,16 +1,9 @@
 package justin_kim.careNeighbers.user;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Table(name = "users")
-@Entity
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserRequest {
 
     @NotBlank(message = "Username must not be empty")
     private String username;
@@ -19,24 +12,10 @@ public class User {
     @Email(message = "Email should be valid")
     private String email;
 
+    @NotBlank(message = "Password must not be empty")
     private String password;
 
-    public User() {}
-
-    public User(Long id, String username, String email, String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password; // 비밀번호는 해시화해야 함
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters and setters...
 
     public String getUsername() {
         return username;
@@ -59,7 +38,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        // 비밀번호 해시화 로직 추가 (예: BCrypt)
-        this.password = password; // 실제로는 해시화된 비밀번호를 저장해야 함
+        this.password = password;
     }
 }

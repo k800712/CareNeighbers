@@ -1,6 +1,7 @@
 package justin_kim.careNeighbers.comment;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreatCommentRequst(
@@ -9,16 +10,10 @@ public record CreatCommentRequst(
         String content,
 
         @NotBlank
-        String authorId,
+        Long authorId,
 
         @NotBlank
-        String postId,
+        Long postId,
 
-        String parentCommentId){
-
-
-
+        Long parentCommentId) {
 }
-
-
-
