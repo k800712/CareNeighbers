@@ -70,4 +70,9 @@ public class TodoService {
                 .filter(todo -> Status.COMPLETED.equals(todo.getStatus()))
                 .collect(Collectors.toList());
     }
+    public List<Todo> getPendingTodos() {
+        return todoRepository.findAll().stream()
+                .filter(todo -> Status.PENDING.equals(todo.getStatus()))
+                .collect(Collectors.toList());
+    }
 }

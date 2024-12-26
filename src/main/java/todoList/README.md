@@ -31,22 +31,27 @@
 - Method : DELETE
 
 6. 할 일 완료 처리
-   URL: `/api/todos/{id}/complete`
-   Method: PATCH
-   Response: 완료 처리된 Todo 객체
+ -  URL: `/api/todos/{id}/complete`
+ -  Method: PATCH
+ -  Response: 완료 처리된 Todo 객체
 7. 할 일 검색
-   URL: `/api/todos/search?keyword={keyword}`
-   Method: GET
-   Response: 검색 결과에 해당하는 Todo 객체 리스트
+ -  URL: `/api/todos/search?keyword={keyword}`
+ -  Method: GET
+ -  Response: 검색 결과에 해당하는 Todo 객체 리스트
 8. 오늘의 할 일 조회
-   URL: `/api/todos/today`
-   Method: GET
-   Response: 오늘 날짜의 Todo 객체 리스트
+ -  URL: `/api/todos/today`
+ -  Method: GET
+ -  Response: 오늘 날짜의 Todo 객체 리스트
 9. 완료된 할 일 조회
-   URL: `/api/todos/completed`
-   Method: GET
-   Response: 완료된 상태의 Todo 객체 리스트
-10. Todo 객체 구조
+ -  URL: `/api/todos/completed`
+ -  Method: GET
+ -  Response: 완료된 상태의 Todo 객체 리스트
+10. 미완료된 할 일 조회
+-  URL: `/api/todos/pending`
+-  Method: GET
+-  Response: 미완료된 상태의 Todo 객체 리스트
+
+11. Todo 객체 구조
     {
     "id": 5,
     "title": "할 일 제목5",

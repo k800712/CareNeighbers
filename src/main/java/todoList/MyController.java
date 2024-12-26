@@ -71,4 +71,9 @@ public class MyController {
     public List<Todo> getCompletedTodos() {
         return todoService.getCompletedTodos();
     }
+
+    @GetMapping("/pending")
+    public List<Todo> getPendingTodos() {
+        return todoService.getPendingTodos();
+    }
 }
