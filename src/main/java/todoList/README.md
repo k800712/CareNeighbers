@@ -48,11 +48,12 @@
    Response: 완료된 상태의 Todo 객체 리스트
 10. Todo 객체 구조
     {
-    "id": 1,
-    "title": "할 일 제목",
-    "description": "할 일 설명",
-    "createdAt": "2023-12-26T10:00:00",
+    "id": 5,
+    "title": "할 일 제목5",
+    "description": "수업 준비하기",
+    "createdAt": "2024-12-26T11:58:18.543684",
     "dueDate": "2023-12-31T23:59:59",
+    "completedAt": null,
     "status": "PENDING",
     "priority": "HIGH"
     }
