@@ -13,16 +13,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/todos")
-public class MyController {
+public class TodoController {
+
     private final TodoService todoService;
 
-    @Autowired
-    public MyController(TodoService todoService) {
+    public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
     @PostMapping
-    public Todo createTodo(@RequestBody Todo todo) {
+    public Todo createTodo(@RequestBody CreateTodoRequest todo) {
         return todoService.createTodo(todo);
     }
 

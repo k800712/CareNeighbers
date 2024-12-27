@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 public class TodoService {
     private final TodoRepository todoRepository;
 
-    @Autowired
+
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
 
-    public Todo createTodo(Todo todo) {
+    public Todo createTodo(CreateTodoRequest request) {
+        Todo todo = new Todo(request.title(), request.description(), request.priority());
         return todoRepository.save(todo);
     }
 
