@@ -65,16 +65,7 @@
 - status: "PENDING" 또는 "COMPLETED"
 - priority: "LOW", "MEDIUM", 또는 "HIGH"
 
-12. 생산성 보고서 조회
-- URL:`/api/todos/productivity-report`
-- Method: GET
-- Response: 생산성 관련 지표를 포함한 Map<String, Double>
-  {
-  "completionRate": 75.0,
-  "averageCompletionTime": 120.5
-  }
-
-13. 통계 및 생산성 보고서 조회
+12. 통계 및 생산성 보고서 조회
 - URL:`/api/todos/statistics`
 - Method: GET
 - Response: 통계 정보와 생산성 보고서를 포함한 Map<String, Object>
@@ -88,18 +79,18 @@
   "averageCompletionTime": 120.5
   }
 
-14. 할 일 재개(완료상태에서 미완료 상태로 변경)
+13. 할 일 재개(완료상태에서 미완료 상태로 변경)
 - URL:`/api/todos/{id}/reopen`
 - Method: PATCH
 - Response: 재개된 Todo 객체
 
-15. 첨부 파일 추가
+14. 첨부 파일 추가
 - URL:`/api/todos/{id}/attachments`
 - Method: POST
 - Body: MultipartFile (form-data)
 - Response: 첨부 파일이 추가된 Todo 객체
 
-16. 첨부 파일 다운로드
+15. 첨부 파일 다운로드
 - URL:`/api/todos/{todoId}/attachments/{attachmentId}`
 - Method: GET
 - Response: 첨부 파일 데이터

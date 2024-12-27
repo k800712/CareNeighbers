@@ -82,16 +82,6 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Double> getProductivityReport() {
-        long totalTodos = todoRepository.count();
-        long completedTodos = todoRepository.countByStatus(Status.COMPLETED);
-
-        Map<String, Double> report = new HashMap<>();
-        report.put("completionRate", (double) completedTodos / totalTodos * 100);
-        report.put("averageCompletionTime", calculateAverageCompletionTime());
-        return report;
-    }
-
     public Map<String, Object> getStatistics() {
         Map<String, Object> stats = new HashMap<>();
         long totalTodos = todoRepository.count();

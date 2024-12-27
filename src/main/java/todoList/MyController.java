@@ -84,11 +84,7 @@ public class MyController {
     public List<Todo> getPendingTodos() {
         return todoService.getPendingTodos();
 
-    }
 
-    @GetMapping("/productivity-report")
-    public Map<String, Double> getProductivityReport() {
-        return todoService.getProductivityReport();
     }
     @GetMapping("/statistics")
     public Map<String, Object> getStatistics() {
