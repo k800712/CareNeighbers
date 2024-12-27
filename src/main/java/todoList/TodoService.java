@@ -124,5 +124,14 @@ public class TodoService {
         return (double) totalCompletionTime / completedTodos.size();
     }
 
+    public Todo reopenTodo(Long id) {
+        Todo todo = getTodoById(id);
+        if (todo.getStatus() != Status.COMPLETED) {
+            throw new RuntimeException("This todo is not completed");
+        }
+        todo.setStatus(Status.PENDING);
+        todo.setCompletedAt(null);
+        return todoRepository.save(todo);
+    }
 
 }

@@ -64,20 +64,8 @@
     }
 - status: "PENDING" 또는 "COMPLETED"
 - priority: "LOW", "MEDIUM", 또는 "HIGH"
-    
-12. 통계 정보 조회    
-- URL: `/api/todos/statistics`
-- Method: GET
-- Response: 통계 정보를 포함한 Map<String, Long>
-  {
-  "totalTodos": 100,
-  "completedTodos": 75,
-  "pendingTodos": 25,
-  "highPriorityTodos": 30,
-  "overdueTodos": 5
-  }
 
-13. 생산성 보고서 조회
+12. 생산성 보고서 조회
 - URL: `/api/todos/productivity-report`
 - Method: GET
 - Response: 생산성 관련 지표를 포함한 Map<String, Double>
@@ -86,8 +74,8 @@
   "averageCompletionTime": 120.5
   }
 
-14. 통계 및 생산성 보고서 조회
-- URL: /api/todos/statistics
+13. 통계 및 생산성 보고서 조회
+- URL: `/api/todos/statistics`
 - Method: GET
 - Response: 통계 정보와 생산성 보고서를 포함한 Map<String, Object>
   {
@@ -100,5 +88,9 @@
   "averageCompletionTime": 120.5
   }
 
+14. 할 일 재개(완료상태에서 미완료 상태로 변경)
+    URL: `/api/todos/{id}/reopen`
+    Method: PATCH
+    Response: 재개된 Todo 객체
 
 

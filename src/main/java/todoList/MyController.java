@@ -46,6 +46,10 @@ public class MyController {
     public Todo completeTodo(@PathVariable Long id) {
         return todoService.completeTodo(id);
     }
+    @PatchMapping("/{id}/reopen")
+    public Todo reopenTodo(@PathVariable Long id) {
+        return todoService.reopenTodo(id);
+    }
 
     @GetMapping("/{id}/completed-time")
     public LocalDateTime getCompletedTime(@PathVariable Long id) {
@@ -86,4 +90,5 @@ public class MyController {
     public Map<String, Object> getStatistics() {
         return todoService.getStatistics();
     }
+
 }
