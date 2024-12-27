@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -56,7 +57,6 @@ public class MyController {
 
     }
 
-
     @GetMapping("/search")
     public List<Todo> searchTodos(@RequestParam String keyword) {
         return todoService.searchTodos(keyword);
@@ -75,5 +75,15 @@ public class MyController {
     @GetMapping("/pending")
     public List<Todo> getPendingTodos() {
         return todoService.getPendingTodos();
+
+    }
+
+    @GetMapping("/productivity-report")
+    public Map<String, Double> getProductivityReport() {
+        return todoService.getProductivityReport();
+    }
+    @GetMapping("/statistics")
+    public Map<String, Object> getStatistics() {
+        return todoService.getStatistics();
     }
 }

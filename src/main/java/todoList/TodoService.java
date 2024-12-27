@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,9 +73,56 @@ public class TodoService {
                 .filter(todo -> Status.COMPLETED.equals(todo.getStatus()))
                 .collect(Collectors.toList());
     }
+
     public List<Todo> getPendingTodos() {
         return todoRepository.findAll().stream()
                 .filter(todo -> Status.PENDING.equals(todo.getStatus()))
                 .collect(Collectors.toList());
     }
+
+    public Map<String, Double> getProductivityReport() {
+        long totalTodos = todoRepository.count();
+        long completedTodos = todoRepository.countByStatus(Status.COMPLETED);
+
+        Map<String, Double> report = new HashMap<>();
+        report.put("completionRate", (double) completedTodos / totalTodos * 100);
+        report.put("averageCompletionTime", calculateAverageCompletionTime());
+        return report;
+    }
+
+    public Map<String, Object> getStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        long totalTodos = todoRepository.count();
+        long completedTodos = todoRepository.countByStatus(Status.COMPLETED);
+        long pendingTodos = todoRepository.countByStatus(Status.PENDING);
+        long highPriorityTodos = todoRepository.countByPriority(Priority.HIGH);
+        long overdueTodos = todoRepository.countByDueDateBefore(LocalDateTime.now());
+
+        stats.put("totalTodos", totalTodos);
+        stats.put("completedTodos", completedTodos);
+        stats.put("pendingTodos", pendingTodos);
+        stats.put("highPriorityTodos", highPriorityTodos);
+        stats.put("overdueTodos", overdueTodos);
+        stats.put("completionRate", calculateCompletionRate(totalTodos, completedTodos));
+        stats.put("averageCompletionTime", calculateAverageCompletionTime());
+
+        return stats;
+    }
+
+    private double calculateCompletionRate(long totalTodos, long completedTodos) {
+        return totalTodos > 0 ? (double) completedTodos / totalTodos * 100 : 0;
+    }
+
+    private double calculateAverageCompletionTime() {
+        List<Todo> completedTodos = todoRepository.findByStatus(Status.COMPLETED);
+        if (completedTodos.isEmpty()) {
+            return 0;
+        }
+        long totalCompletionTime = completedTodos.stream()
+                .mapToLong(todo -> ChronoUnit.MINUTES.between(todo.getCreatedAt(), todo.getCompletedAt()))
+                .sum();
+        return (double) totalCompletionTime / completedTodos.size();
+    }
+
+
 }
