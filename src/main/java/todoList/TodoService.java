@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class TodoService {
 
     public Todo completeTodo(Long id) {
         Todo todo = getTodoById(id);
-        todo.setStatus(Status.COMPLETED);
+        todo.setStatus(Todo.Status.COMPLETED);
         todo.setCompletedAt(LocalDateTime.now());
         return todoRepository.save(todo);
     }
@@ -63,31 +64,30 @@ public class TodoService {
     }
 
     public List<Todo> getTodayTodos() {
-        LocalDateTime today = LocalDateTime.now();
-        return todoRepository.findAll().stream()
-                .filter(todo -> todo.getDueDate() != null &&
-                        today.toLocalDate().equals(todo.getDueDate().toLocalDate()))
-                .collect(Collectors.toList());
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime startOfNextDay = today.plusDays(1).atStartOfDay();
+        return todoRepository.findTodayTodos(startOfDay, startOfNextDay);
     }
 
     public List<Todo> getCompletedTodos() {
         return todoRepository.findAll().stream()
-                .filter(todo -> Status.COMPLETED.equals(todo.getStatus()))
+                .filter(todo -> Todo.Status.COMPLETED.equals(todo.getStatus()))
                 .collect(Collectors.toList());
     }
 
     public List<Todo> getPendingTodos() {
         return todoRepository.findAll().stream()
-                .filter(todo -> Status.PENDING.equals(todo.getStatus()))
+                .filter(todo -> Todo.Status.PENDING.equals(todo.getStatus()))
                 .collect(Collectors.toList());
     }
 
     public Map<String, Object> getStatistics() {
         Map<String, Object> stats = new HashMap<>();
         long totalTodos = todoRepository.count();
-        long completedTodos = todoRepository.countByStatus(Status.COMPLETED);
-        long pendingTodos = todoRepository.countByStatus(Status.PENDING);
-        long highPriorityTodos = todoRepository.countByPriority(Priority.HIGH);
+        long completedTodos = todoRepository.countByStatus(Todo.Status.COMPLETED);
+        long pendingTodos = todoRepository.countByStatus(Todo.Status.PENDING);
+        long highPriorityTodos = todoRepository.countByPriority(Todo.Priority.HIGH);
         long overdueTodos = todoRepository.countByDueDateBefore(LocalDateTime.now());
 
         stats.put("totalTodos", totalTodos);
@@ -106,28 +106,30 @@ public class TodoService {
     }
 
     private double calculateAverageCompletionTime() {
-        List<Todo> completedTodos = todoRepository.findByStatus(Status.COMPLETED);
+        List<Todo> completedTodos = todoRepository.findByStatus(Todo.Status.COMPLETED);
         if (completedTodos.isEmpty()) {
             return 0;
         }
         long totalCompletionTime = completedTodos.stream()
-                .mapToLong(todo -> ChronoUnit.MINUTES.between(todo.getCreatedAt(), todo.getCompletedAt()))
+                .mapToLong(todo -> ChronoUnit.MINUTES.between(todo.getCreatedAt(),
+                        todo.getCompletedAt()))
                 .sum();
         return (double) totalCompletionTime / completedTodos.size();
     }
 
     public Todo reopenTodo(Long id) {
         Todo todo = getTodoById(id);
-        if (todo.getStatus() != Status.COMPLETED) {
+        if (todo.getStatus() != Todo.Status.COMPLETED) {
             throw new RuntimeException("This todo is not completed");
         }
-        todo.setStatus(Status.PENDING);
+        todo.setStatus(Todo.Status.PENDING);
         todo.setCompletedAt(null);
         return todoRepository.save(todo);
     }
+
     public Todo addAttachment(Long todoId, MultipartFile file) throws IOException {
         Todo todo = getTodoById(todoId);
-        Attachment attachment = new Attachment();
+        Todo.Attachment attachment = new Todo.Attachment();
         attachment.setFileName(file.getOriginalFilename());
         attachment.setFileType(file.getContentType());
         attachment.setData(file.getBytes());
@@ -135,12 +137,11 @@ public class TodoService {
         return todoRepository.save(todo);
     }
 
-    public Attachment getAttachment(Long todoId, Long attachmentId) {
+    public Todo.Attachment getAttachment(Long todoId, Long attachmentId) {
         Todo todo = getTodoById(todoId);
         return todo.getAttachments().stream()
                 .filter(attachment -> attachment.getId().equals(attachmentId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Attachment not found"));
     }
-
 }

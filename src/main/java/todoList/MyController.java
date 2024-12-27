@@ -50,6 +50,7 @@ public class MyController {
     public Todo completeTodo(@PathVariable Long id) {
         return todoService.completeTodo(id);
     }
+
     @PatchMapping("/{id}/reopen")
     public Todo reopenTodo(@PathVariable Long id) {
         return todoService.reopenTodo(id);
@@ -58,11 +59,10 @@ public class MyController {
     @GetMapping("/{id}/completed-time")
     public LocalDateTime getCompletedTime(@PathVariable Long id) {
         Todo todo = todoService.getTodoById(id);
-        if (todo.getStatus() != Status.COMPLETED) {
+        if (todo.getStatus() != Todo.Status.COMPLETED) {
             throw new RuntimeException("This todo is not completed yet");
         }
         return todo.getCompletedAt();
-
     }
 
     @GetMapping("/search")
@@ -83,13 +83,13 @@ public class MyController {
     @GetMapping("/pending")
     public List<Todo> getPendingTodos() {
         return todoService.getPendingTodos();
-
-
     }
+
     @GetMapping("/statistics")
     public Map<String, Object> getStatistics() {
         return todoService.getStatistics();
     }
+
     @PostMapping("/{id}/attachments")
     public Todo addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
         return todoService.addAttachment(id, file);
@@ -97,10 +97,9 @@ public class MyController {
 
     @GetMapping("/{todoId}/attachments/{attachmentId}")
     public ResponseEntity<byte[]> getAttachment(@PathVariable Long todoId, @PathVariable Long attachmentId) {
-        Attachment attachment = todoService.getAttachment(todoId, attachmentId);
+        Todo.Attachment attachment = todoService.getAttachment(todoId, attachmentId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileName() + "\"")
                 .body(attachment.getData());
     }
-
 }
