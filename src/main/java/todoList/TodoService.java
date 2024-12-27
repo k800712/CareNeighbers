@@ -2,7 +2,9 @@ package todoList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -132,6 +134,23 @@ public class TodoService {
         todo.setStatus(Status.PENDING);
         todo.setCompletedAt(null);
         return todoRepository.save(todo);
+    }
+    public Todo addAttachment(Long todoId, MultipartFile file) throws IOException {
+        Todo todo = getTodoById(todoId);
+        Attachment attachment = new Attachment();
+        attachment.setFileName(file.getOriginalFilename());
+        attachment.setFileType(file.getContentType());
+        attachment.setData(file.getBytes());
+        todo.getAttachments().add(attachment);
+        return todoRepository.save(todo);
+    }
+
+    public Attachment getAttachment(Long todoId, Long attachmentId) {
+        Todo todo = getTodoById(todoId);
+        return todo.getAttachments().stream()
+                .filter(attachment -> attachment.getId().equals(attachmentId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Attachment not found"));
     }
 
 }

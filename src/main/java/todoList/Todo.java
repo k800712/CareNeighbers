@@ -1,11 +1,9 @@
 package todoList;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Todo {
@@ -21,18 +19,12 @@ public class Todo {
     private Status status;
     private Priority priority;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Attachment> attachments = new ArrayList<>();
+
     public Todo() {
         this.createdAt = LocalDateTime.now();
         this.status = Status.PENDING;
-
-    }
-
-    public LocalDateTime getCompletedAt() {
-        return completedAt;
-    }
-
-    public void setCompletedAt(LocalDateTime completedAt) {
-        this.completedAt = completedAt;
     }
 
     public Long getId() { return id; }
@@ -45,10 +37,14 @@ public class Todo {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getDueDate() { return dueDate; }
     public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
+    public LocalDateTime getCompletedAt() { return completedAt; }
+    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
     public Priority getPriority() { return priority; }
     public void setPriority(Priority priority) { this.priority = priority; }
+    public List<Attachment> getAttachments() { return attachments; }
+    public void setAttachments(List<Attachment> attachments) { this.attachments = attachments; }
 }
 
 enum Status {
@@ -58,3 +54,26 @@ enum Status {
 enum Priority {
     LOW, MEDIUM, HIGH
 }
+
+@Entity
+class Attachment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String fileName;
+    private String fileType;
+
+    @Lob
+    private byte[] data;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getFileName() { return fileName; }
+    public void setFileName(String fileName) { this.fileName = fileName; }
+    public String getFileType() { return fileType; }
+    public void setFileType(String fileType) { this.fileType = fileType; }
+    public byte[] getData() { return data; }
+    public void setData(byte[] data) { this.data = data; }
+}
+

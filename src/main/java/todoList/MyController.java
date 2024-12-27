@@ -1,8 +1,12 @@
 package todoList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +93,18 @@ public class MyController {
     @GetMapping("/statistics")
     public Map<String, Object> getStatistics() {
         return todoService.getStatistics();
+    }
+    @PostMapping("/{id}/attachments")
+    public Todo addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        return todoService.addAttachment(id, file);
+    }
+
+    @GetMapping("/{todoId}/attachments/{attachmentId}")
+    public ResponseEntity<byte[]> getAttachment(@PathVariable Long todoId, @PathVariable Long attachmentId) {
+        Attachment attachment = todoService.getAttachment(todoId, attachmentId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileName() + "\"")
+                .body(attachment.getData());
     }
 
 }
