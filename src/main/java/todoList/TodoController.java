@@ -132,6 +132,7 @@ public class TodoController {
                 todo.getPriority(),
                 todo.getStatus(),
                 todo.getCreatedAt(),
+                todo.getDueDate(),
                 todo.getCompletedAt()
         );
     }
