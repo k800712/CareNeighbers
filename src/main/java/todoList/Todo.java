@@ -12,7 +12,7 @@ public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String createdUserName;
     private String title;
     private String description;
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -27,11 +27,26 @@ public class Todo {
     public Todo() {
     }
 
-    public Todo(String title, String description, Priority priority) {
+    public Todo(String createdUserName,String title, String description, Priority priority) {
+        this.createdUserName = createdUserName;
         this.title = title;
         this.description = description;
         this.priority = priority;
     }
+
+    public String getCreatedUserName() {
+        return createdUserName;
+    }
+
+    public void setCreatedUserName(String createdUserName) {
+        this.createdUserName = createdUserName;
+    }
+
+    public String getUserName() {return createdUserName;}
+
+    public void setUserName(String createdUserName) {
+        this.createdUserName = createdUserName;}
+
 
     public Long getId() {
         return id;

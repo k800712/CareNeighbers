@@ -23,12 +23,18 @@ public class TodoService {
     }
 
     public Todo createTodo(CreateTodoRequest request) {
-        Todo todo = new Todo(request.title(), request.description(), request.priority());
+        Todo todo = new Todo(request.createdUserName(),request.title(), request.description(), request.priority());
         return todoRepository.save(todo);
     }
 
     public List<Todo> getAllTodos() {
         return todoRepository.findAll();
+    }
+
+    public List<Todo> getTodosByUserName(String createdUserName) {
+        return todoRepository.findAll().stream()
+                .filter(todo -> todo.getCreatedUserName().contains(createdUserName))
+                        .collect(Collectors.toList());
     }
 
     public Todo getTodoById(Long id) {
