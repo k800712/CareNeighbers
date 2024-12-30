@@ -16,7 +16,7 @@
 - Response : Todo 객체 리스트
 
 4. 작성자 기준 조회
-- URL : `/api/todos/by-username?username={keyword}`
+- URL : `/api/todos/by-username?username={username}`
 - Method : GET
 - Response : Todo 객체 리스트
 
