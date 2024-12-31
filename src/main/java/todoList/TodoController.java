@@ -123,20 +123,6 @@ public class TodoController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/sorted")
-    public List<TodoDTO> getAllTodosSorted(@RequestParam(defaultValue = "newest") String sortBy) {
-        return todoService.getAllTodosSortedBy(sortBy).stream()
-                .map(todoService::convertToDTO)
-                .collect(Collectors.toList());
-    }
 
-    @PatchMapping("/{id}/view")
-    public TodoDTO incrementViewCount(@PathVariable Long id) {
-        return todoService.convertToDTO(todoService.incrementViewCount(id));
-    }
-
-    @PatchMapping("/{id}/like")
-    public TodoDTO incrementLikeCount(@PathVariable Long id) {
-        return todoService.convertToDTO(todoService.incrementLikeCount(id));
-    }
 }
+

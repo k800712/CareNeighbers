@@ -150,31 +150,6 @@ public class TodoService {
                 .filter(attachment -> attachment.getId().equals(attachmentId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Attachment not found"));
-    }
-
-    public List<Todo> getAllTodosSortedBy(String sortBy) {
-        switch (sortBy) {
-            case "newest":
-                return todoRepository.findAllByOrderByCreatedAtDesc();
-            case "mostViewed":
-                return todoRepository.findAllByOrderByViewCountDesc();
-            case "mostLiked":
-                return todoRepository.findAllByOrderByLikeCountDesc();
-            default:
-                return todoRepository.findAll();
-        }
-    }
-
-    public Todo incrementViewCount(Long id) {
-        Todo todo = getTodoById(id);
-        todo.incrementViewCount();
-        return todoRepository.save(todo);
-    }
-
-    public Todo incrementLikeCount(Long id) {
-        Todo todo = getTodoById(id);
-        todo.incrementLikeCount();
-        return todoRepository.save(todo);
 
     }
     public TodoDTO convertToDTO(Todo todo) {
@@ -187,9 +162,8 @@ public class TodoService {
                 todo.getStatus(),
                 todo.getCreatedAt(),
                 todo.getDueDate(),
-                todo.getCompletedAt(),
-                todo.getViewCount(),
-                todo.getLikeCount()
+                todo.getCompletedAt()
+
         );
     }
 

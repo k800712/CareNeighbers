@@ -24,8 +24,6 @@ public class Todo {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
-    private int viewCount = 0;
-    private int likeCount = 0;
 
     public Todo() {
     }
@@ -35,22 +33,7 @@ public class Todo {
         this.title = title;
         this.description = description;
         this.priority = priority;
-    }
 
-    public int getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(int viewCount) {
-        this.viewCount = viewCount;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
     }
 
     public String getCreatedUserName() {
@@ -142,13 +125,6 @@ public class Todo {
         this.attachments = attachments;
     }
 
-    public void incrementViewCount() {
-        this.viewCount++;
-    }
-
-    public void incrementLikeCount() {
-        this.likeCount++;
-    }
 
     public enum Status {
         PENDING, COMPLETED
