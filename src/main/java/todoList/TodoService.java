@@ -1,5 +1,6 @@
 package todoList;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public class TodoService {
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
-
+    @Transactional
     public Todo createTodo(CreateTodoRequest request) {
         Todo todo = new Todo(request.createdUserName(), request.title(), request.description(), request.priority());
         return todoRepository.save(todo);
@@ -41,7 +42,7 @@ public class TodoService {
         return todoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Todo not found"));
     }
-
+    @Transactional
     public Todo updateTodo(Long id, Todo todoDetails) {
         Todo todo = getTodoById(id);
         todo.setTitle(todoDetails.getTitle());
@@ -50,11 +51,11 @@ public class TodoService {
         todo.setPriority(todoDetails.getPriority());
         return todoRepository.save(todo);
     }
-
+    @Transactional
     public void deleteTodo(Long id) {
         todoRepository.deleteById(id);
     }
-
+    @Transactional
     public Todo completeTodo(Long id) {
         Todo todo = getTodoById(id);
         todo.setStatus(Todo.Status.COMPLETED);
@@ -123,7 +124,7 @@ public class TodoService {
                 .sum();
         return (double) totalCompletionTime / completedTodos.size();
     }
-
+    @Transactional
     public Todo reopenTodo(Long id) {
         Todo todo = getTodoById(id);
         if (todo.getStatus() != Todo.Status.COMPLETED) {

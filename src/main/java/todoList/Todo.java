@@ -19,6 +19,7 @@ public class Todo {
     private LocalDateTime dueDate = LocalDate.now().atTime(23, 59, 59);
     private LocalDateTime completedAt;
     private Status status = Status.PENDING;
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
