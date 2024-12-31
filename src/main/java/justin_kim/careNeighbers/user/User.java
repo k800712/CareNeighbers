@@ -62,4 +62,8 @@ public class User {
         // 비밀번호 해시화 로직 추가 (예: BCrypt)
         this.password = password; // 실제로는 해시화된 비밀번호를 저장해야 함
     }
+
+    public String password() {
+        return password;
+    }
 }
