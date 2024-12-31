@@ -23,7 +23,7 @@ public class TodoService {
     }
 
     public Todo createTodo(CreateTodoRequest request) {
-        Todo todo = new Todo(request.createdUserName(),request.title(), request.description(), request.priority());
+        Todo todo = new Todo(request.createdUserName(), request.title(), request.description(), request.priority());
         return todoRepository.save(todo);
     }
 
@@ -34,7 +34,7 @@ public class TodoService {
     public List<Todo> getTodosByUserName(String createdUserName) {
         return todoRepository.findAll().stream()
                 .filter(todo -> todo.getCreatedUserName().contains(createdUserName))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public Todo getTodoById(Long id) {
@@ -150,5 +150,54 @@ public class TodoService {
                 .filter(attachment -> attachment.getId().equals(attachmentId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Attachment not found"));
+    }
+
+    public List<Todo> getAllTodosSortedBy(String sortBy) {
+        switch (sortBy) {
+            case "newest":
+                return todoRepository.findAllByOrderByCreatedAtDesc();
+            case "mostViewed":
+                return todoRepository.findAllByOrderByViewCountDesc();
+            case "mostLiked":
+                return todoRepository.findAllByOrderByLikeCountDesc();
+            default:
+                return todoRepository.findAll();
+        }
+    }
+
+    public Todo incrementViewCount(Long id) {
+        Todo todo = getTodoById(id);
+        todo.incrementViewCount();
+        return todoRepository.save(todo);
+    }
+
+    public Todo incrementLikeCount(Long id) {
+        Todo todo = getTodoById(id);
+        todo.incrementLikeCount();
+        return todoRepository.save(todo);
+
+    }
+    public TodoDTO convertToDTO(Todo todo) {
+        return new TodoDTO(
+                todo.getId(),
+                todo.getCreatedUserName(),
+                todo.getTitle(),
+                todo.getDescription(),
+                todo.getPriority(),
+                todo.getStatus(),
+                todo.getCreatedAt(),
+                todo.getDueDate(),
+                todo.getCompletedAt(),
+                todo.getViewCount(),
+                todo.getLikeCount()
+        );
+    }
+
+    public AttachmentDTO convertToAttachmentDTO(Todo.Attachment attachment) {
+        return new AttachmentDTO(
+                attachment.getId(),
+                attachment.getFileName(),
+                attachment.getFileType()
+        );
     }
 }

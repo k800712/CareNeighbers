@@ -22,26 +22,26 @@ public class TodoController {
 
     @PostMapping
     public TodoDTO createTodo(@RequestBody CreateTodoRequest request) {
-        return convertToDTO(todoService.createTodo(request));
+        return todoService.convertToDTO(todoService.createTodo(request));
     }
 
     @GetMapping
     public List<TodoDTO> getAllTodos() {
         return todoService.getAllTodos().stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/by-username")
     public List<TodoDTO> getTodosByUserName(@RequestParam String username) {
         return todoService.getTodosByUserName(username).stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public TodoDTO getTodoById(@PathVariable Long id) {
-        return convertToDTO(todoService.getTodoById(id));
+        return todoService.convertToDTO(todoService.getTodoById(id));
     }
 
     @PutMapping("/{id}")
@@ -51,7 +51,7 @@ public class TodoController {
         todo.setDescription(request.description());
         todo.setPriority(request.priority());
         todo.setDueDate((LocalDateTime) request.dueDate());
-        return convertToDTO(todoService.updateTodo(id, todo));
+        return todoService.convertToDTO(todoService.updateTodo(id, todo));
     }
 
     @DeleteMapping("/{id}")
@@ -61,39 +61,39 @@ public class TodoController {
 
     @PatchMapping("/{id}/complete")
     public TodoDTO completeTodo(@PathVariable Long id) {
-        return convertToDTO(todoService.completeTodo(id));
+        return todoService.convertToDTO(todoService.completeTodo(id));
     }
 
     @PatchMapping("/{id}/reopen")
     public TodoDTO reopenTodo(@PathVariable Long id) {
-        return convertToDTO(todoService.reopenTodo(id));
+        return todoService.convertToDTO(todoService.reopenTodo(id));
     }
 
     @GetMapping("/search")
     public List<TodoDTO> searchTodos(@RequestParam String keyword) {
         return todoService.searchTodos(keyword).stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/today")
     public List<TodoDTO> getTodayTodos() {
         return todoService.getTodayTodos().stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/completed")
     public List<TodoDTO> getCompletedTodos() {
         return todoService.getCompletedTodos().stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/pending")
     public List<TodoDTO> getPendingTodos() {
         return todoService.getPendingTodos().stream()
-                .map(this::convertToDTO)
+                .map(todoService::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -104,7 +104,7 @@ public class TodoController {
 
     @PostMapping("/{id}/attachments")
     public TodoDTO addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-        return convertToDTO(todoService.addAttachment(id, file));
+        return todoService.convertToDTO(todoService.addAttachment(id, file));
     }
 
     @GetMapping("/{todoId}/attachments/{attachmentId}")
@@ -119,29 +119,24 @@ public class TodoController {
     public List<AttachmentDTO> getTodoAttachments(@PathVariable Long id) {
         Todo todo = todoService.getTodoById(id);
         return todo.getAttachments().stream()
-                .map(this::convertToAttachmentDTO)
+                .map(todoService::convertToAttachmentDTO)
                 .collect(Collectors.toList());
     }
 
-    private TodoDTO convertToDTO(Todo todo) {
-        return new TodoDTO(
-                todo.getId(),
-                todo.getCreatedUserName(),
-                todo.getTitle(),
-                todo.getDescription(),
-                todo.getPriority(),
-                todo.getStatus(),
-                todo.getCreatedAt(),
-                todo.getDueDate(),
-                todo.getCompletedAt()
-        );
+    @GetMapping("/sorted")
+    public List<TodoDTO> getAllTodosSorted(@RequestParam(defaultValue = "newest") String sortBy) {
+        return todoService.getAllTodosSortedBy(sortBy).stream()
+                .map(todoService::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    private AttachmentDTO convertToAttachmentDTO(Todo.Attachment attachment) {
-        return new AttachmentDTO(
-                attachment.getId(),
-                attachment.getFileName(),
-                attachment.getFileType()
-        );
+    @PatchMapping("/{id}/view")
+    public TodoDTO incrementViewCount(@PathVariable Long id) {
+        return todoService.convertToDTO(todoService.incrementViewCount(id));
+    }
+
+    @PatchMapping("/{id}/like")
+    public TodoDTO incrementLikeCount(@PathVariable Long id) {
+        return todoService.convertToDTO(todoService.incrementLikeCount(id));
     }
 }

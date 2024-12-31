@@ -99,3 +99,39 @@
 - URL:`/api/todos/{todoId}/attachments/{attachmentId}`
 - Method: GET
 - Response: 첨부 파일 데이터
+
+17. 정렬된 할 일 목록 조회
+- URL: /api/todos/sorted?sortBy={sortCriteria}
+- Method: GET
+- Query Parameters:
+  sortBy: "newest" (최신순), 
+  "mostViewed" (조회순), 
+  "mostLiked" (추천순)
+- Response: 정렬된 Todo 객체 리스트
+
+18. 할 일 조회수 증가
+- URL: /api/todos/{id}/view
+- Method: PATCH
+- Response: 조회수가 증가된 Todo 객체
+
+19. 할 일 추천수 증가 
+- URL: /api/todos/{id}/like
+- Method: PATCH
+- Response: 추천수가 증가된 Todo 객체
+
+20. Todo 객체 구조(업데이트)
+{
+    "id": 5,
+    "title": "할 일 제목5",
+    "description": "수업 준비하기",
+    "createdAt": "2024-12-26T11:58:18.543684",
+    "dueDate": "2023-12-31T23:59:59",
+    "completedAt": null,
+    "status": "PENDING",
+    "priority": "HIGH",
+    "viewCount": 10,
+    "likeCount": 5
+    }
+    status: "PENDING" 또는 "COMPLETED"
+    priority: "LOW", "MEDIUM", 또는 "HIGH"
+    viewCount: 조회수

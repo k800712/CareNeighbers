@@ -18,4 +18,9 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     @Query("SELECT t FROM Todo t WHERE t.dueDate >= :startOfDay AND t.dueDate < :startOfNextDay")
     List<Todo> findTodayTodos(@Param("startOfDay") LocalDateTime startOfDay, @Param("startOfNextDay") LocalDateTime startOfNextDay);
+
+    List<Todo> findAllByOrderByCreatedAtDesc();
+    List<Todo> findAllByOrderByViewCountDesc();
+    List<Todo> findAllByOrderByLikeCountDesc();
+
 }

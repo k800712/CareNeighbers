@@ -18,20 +18,39 @@ public class Todo {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime dueDate = LocalDate.now().atTime(23, 59, 59);
     private LocalDateTime completedAt;
-    private Status status  = Status.PENDING;
+    private Status status = Status.PENDING;
     private Priority priority;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
+    private int viewCount = 0;
+    private int likeCount = 0;
+
     public Todo() {
     }
 
-    public Todo(String createdUserName,String title, String description, Priority priority) {
+    public Todo(String createdUserName, String title, String description, Priority priority) {
         this.createdUserName = createdUserName;
         this.title = title;
         this.description = description;
         this.priority = priority;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 
     public String getCreatedUserName() {
@@ -42,10 +61,13 @@ public class Todo {
         this.createdUserName = createdUserName;
     }
 
-    public String getUserName() {return createdUserName;}
+    public String getUserName() {
+        return createdUserName;
+    }
 
     public void setUserName(String createdUserName) {
-        this.createdUserName = createdUserName;}
+        this.createdUserName = createdUserName;
+    }
 
 
     public Long getId() {
@@ -118,6 +140,14 @@ public class Todo {
 
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
     }
 
     public enum Status {
